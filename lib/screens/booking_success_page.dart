@@ -32,11 +32,13 @@ class _BookingSuccessPageState extends State<BookingSuccessPage>
   @override
   void initState() {
     super.initState();
-    bookingId = _generateBookingId();
+
+    bookingId =
+        'TRF${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}${Random().nextInt(100)}';
 
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 600),
       vsync: this,
+      duration: const Duration(milliseconds: 600),
     );
 
     _scaleAnimation = CurvedAnimation(
@@ -53,16 +55,11 @@ class _BookingSuccessPageState extends State<BookingSuccessPage>
     super.dispose();
   }
 
-  String _generateBookingId() {
-    final random = Random();
-    return 'TRF${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}${random.nextInt(100)}';
-  }
-
   @override
   Widget build(BuildContext context) {
-    String inviteText =
-        """
-🏏 Turf Booking Confirmed!
+    final inviteText =
+        '''
+⚽ Turf Booking Confirmed!
 
 📍 Turf: ${widget.turfName}
 📍 Location: ${widget.location}
@@ -71,425 +68,290 @@ class _BookingSuccessPageState extends State<BookingSuccessPage>
 💰 Amount: ${widget.price}
 
 🆔 Booking ID: $bookingId
-📍 Map: https://maps.google.com
-
-See you on the ground! 💪
-""";
+''';
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      body: SafeArea(
+      backgroundColor: Colors.black,
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _buildSuccessHeader(),
-                    _buildBookingCard(),
-                    _buildQRSection(),
-                    _buildImportantNotes(),
-                  ],
-                ),
-              ),
-            ),
-            _buildActionButtons(inviteText),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSuccessHeader() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 40),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.green[400]!, Colors.green[700]!],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-      child: Column(
-        children: [
-          ScaleTransition(
-            scale: _scaleAnimation,
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
+            /// HEADER
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 40),
+              decoration: const BoxDecoration(color: Colors.green),
+              child: Column(
+                children: const [
+                  Icon(Icons.check_circle, color: Colors.white, size: 72),
+                  SizedBox(height: 16),
+                  Text(
+                    "Booking Confirmed",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    "Your turf is reserved",
+                    style: TextStyle(color: Colors.white70),
                   ),
                 ],
               ),
-              child: Icon(
-                Icons.check_circle,
-                color: Colors.green[700],
-                size: 80,
-              ),
             ),
-          ),
-          const SizedBox(height: 24),
-          const Text(
-            "Booking Confirmed!",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            "Your turf is reserved",
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildBookingCard() {
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
+            /// BOOKING CARD WITH INTEGRATED BUTTONS
+            ScaleTransition(
+              scale: _scaleAnimation,
+              child: Container(
+                margin: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: Colors.green[50],
-                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.grey[900],
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: 20,
+                    ),
+                  ],
                 ),
-                child: Icon(
-                  Icons.sports_soccer,
-                  color: Colors.green[700],
-                  size: 28,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.turfName,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
+                    /// TURF INFO
                     Row(
                       children: [
-                        Icon(
-                          Icons.location_on,
-                          size: 14,
-                          color: Colors.grey[600],
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(
+                            Icons.sports_soccer,
+                            color: Colors.green,
+                            size: 28,
+                          ),
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: 16),
                         Expanded(
-                          child: Text(
-                            widget.location,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey[600],
-                            ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.turfName,
+                                style: const TextStyle(
+                                  color: Colors.white,
+
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.location_on,
+                                    size: 14,
+                                    color: Colors.green,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      widget.location,
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          const Divider(),
-          const SizedBox(height: 16),
-          _buildInfoRow(
-            Icons.calendar_today,
-            "Date",
-            DateFormat('EEEE, dd MMM yyyy').format(widget.date),
-          ),
-          const SizedBox(height: 16),
-          _buildInfoRow(Icons.access_time, "Time Slot", widget.slot),
-          const SizedBox(height: 16),
-          _buildInfoRow(Icons.currency_rupee, "Amount Paid", widget.price),
-          const SizedBox(height: 24),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.amber[50],
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.amber[200]!, width: 1.5),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.confirmation_number, color: Colors.amber[900]),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Booking ID",
-                      style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+
+                    const SizedBox(height: 24),
+                    const Divider(thickness: 0.2),
+                    const SizedBox(height: 16),
+
+                    /// DATE
+                    Row(
+                      children: [
+                        const Icon(Icons.calendar_today, color: Colors.green),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Date",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            Text(
+                              DateFormat(
+                                'EEEE, dd MMM yyyy',
+                              ).format(widget.date),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      bookingId,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.amber[900],
-                        letterSpacing: 1.5,
+
+                    const SizedBox(height: 16),
+
+                    /// TIME
+                    Row(
+                      children: [
+                        const Icon(Icons.access_time, color: Colors.green),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Time Slot",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            Text(
+                              widget.slot,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    /// PRICE
+                    Row(
+                      children: [
+                        const Icon(Icons.currency_rupee, color: Colors.green),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Amount Paid",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            Text(
+                              widget.price,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    /// BOOKING ID
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.confirmation_number,
+                            color: Colors.green,
+                          ),
+                          const SizedBox(width: 12),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Booking ID",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                              Text(
+                                bookingId,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.5,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+                    const Divider(thickness: 0.2),
+                    const SizedBox(height: 20),
+
+                    /// ACTION BUTTONS (INTEGRATED)
+                    SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: ElevatedButton.icon(
+                        onPressed: () => Share.share(inviteText),
+                        icon: const Icon(Icons.share),
+                        label: const Text("Share Invitation"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          Navigator.popUntil(context, (route) => route.isFirst);
+                        },
+                        icon: Image(
+                          color: Colors.green,
+                          height: 20,
+                          image: AssetImage('assets/icons/home.png'),
+                        ),
+                        label: const Text("Back to Home"),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.green,
+                          side: const BorderSide(
+                            color: Colors.white,
+                            width: 0.5,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildInfoRow(IconData icon, String label, String value) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, size: 20, color: Colors.grey[700]),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildQRSection() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Column(
-              children: [
-                Icon(Icons.qr_code_2, size: 120, color: Colors.grey[800]),
-                const SizedBox(height: 12),
-                Text(
-                  "Show this at venue",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[700],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildImportantNotes() {
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.blue[50],
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.blue[100]!, width: 1.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.info_outline, color: Colors.blue[700], size: 24),
-              const SizedBox(width: 8),
-              Text(
-                "Important Notes",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue[900],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          _buildNote("Please arrive 10 minutes before your slot time"),
-          _buildNote("Carry your booking ID or QR code"),
-          _buildNote("Cancellation allowed up to 2 hours before"),
-          _buildNote("Wear appropriate sports attire"),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNote(String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: 6),
-            width: 6,
-            height: 6,
-            decoration: BoxDecoration(
-              color: Colors.blue[700],
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.blue[900],
-                height: 1.5,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionButtons(String inviteText) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Share.share(inviteText);
-                },
-                icon: const Icon(Icons.share, color: Colors.white),
-                label: const Text(
-                  "Share Invitation",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green[700],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 0,
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: OutlinedButton.icon(
-                onPressed: () {
-                  Navigator.popUntil(context, (route) => route.isFirst);
-                },
-                icon: Icon(Icons.home, color: Colors.green[700]),
-                label: Text(
-                  "Back to Home",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green[700],
-                  ),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: Colors.green[700]!, width: 2),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-            ),
+            // Add some bottom padding for better spacing
+            const SizedBox(height: 16),
           ],
         ),
       ),
